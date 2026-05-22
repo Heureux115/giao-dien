@@ -95,9 +95,9 @@ export default function LoginDoctor() {
 
           <p className="text-center text-sm text-gray-600 mt-6">
             Chưa đăng ký làm bác sĩ?{" "}
-            <button type="button" className="text-teal-600 font-medium hover:underline">
+            <Link to="/register/doctor" className="text-teal-600 font-medium hover:underline">
               Đăng ký ngay
-            </button>
+            </Link>
           </p>
         </div>
 
@@ -108,7 +108,7 @@ export default function LoginDoctor() {
             <span className="text-gray-400">|</span>
             <Link to="/login/admin" className="text-sm text-teal-600 hover:underline">Quản trị viên</Link>
             <span className="text-gray-400">|</span>
-            <Link to="/login/ai-specialist" className="text-sm text-teal-600 hover:underline">Chuyên gia AI</Link>
+            <Link to="/login/expert" className="text-sm text-teal-600 hover:underline">Chuyên gia</Link>
           </div>
         </div>
       </div>

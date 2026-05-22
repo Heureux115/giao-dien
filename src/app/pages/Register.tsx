@@ -18,19 +18,6 @@ export default function Register() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (formData.password !== formData.confirmPassword) {
-      alert("Mật khẩu xác nhận không khớp!");
-      return;
-    }
-
-    if (!formData.agreeToTerms) {
-      alert("Vui lòng đồng ý với điều khoản sử dụng!");
-      return;
-    }
-
-    // Mock registration
-    alert("Đăng ký thành công! Vui lòng đăng nhập.");
     navigate("/login");
   };
 
@@ -55,7 +42,7 @@ export default function Register() {
             {/* Full Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Họ và tên <span className="text-red-500">*</span>
+                Họ và tên
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -65,7 +52,6 @@ export default function Register() {
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                   placeholder="Nguyễn Văn A"
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
                 />
               </div>
             </div>
@@ -74,7 +60,7 @@ export default function Register() {
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email <span className="text-red-500">*</span>
+                  Email
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -84,14 +70,13 @@ export default function Register() {
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="email@example.com"
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
                   />
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Số điện thoại <span className="text-red-500">*</span>
+                  Số điện thoại
                 </label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -101,7 +86,6 @@ export default function Register() {
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="0901234567"
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
                   />
                 </div>
               </div>
@@ -111,7 +95,7 @@ export default function Register() {
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Ngày sinh <span className="text-red-500">*</span>
+                  Ngày sinh
                 </label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -120,20 +104,18 @@ export default function Register() {
                     value={formData.birthdate}
                     onChange={(e) => setFormData({ ...formData, birthdate: e.target.value })}
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
                   />
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Giới tính <span className="text-red-500">*</span>
+                  Giới tính
                 </label>
                 <select
                   value={formData.gender}
                   onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
                 >
                   <option value="male">Nam</option>
                   <option value="female">Nữ</option>
@@ -145,7 +127,7 @@ export default function Register() {
             {/* Password */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Mật khẩu <span className="text-red-500">*</span>
+                Mật khẩu
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -155,8 +137,6 @@ export default function Register() {
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   placeholder="Tối thiểu 8 ký tự"
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                  minLength={8}
                 />
                 <button
                   type="button"
@@ -171,7 +151,7 @@ export default function Register() {
             {/* Confirm Password */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Xác nhận mật khẩu <span className="text-red-500">*</span>
+                Xác nhận mật khẩu
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -181,7 +161,6 @@ export default function Register() {
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                   placeholder="Nhập lại mật khẩu"
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
                 />
               </div>
             </div>
@@ -194,7 +173,6 @@ export default function Register() {
                 checked={formData.agreeToTerms}
                 onChange={(e) => setFormData({ ...formData, agreeToTerms: e.target.checked })}
                 className="w-4 h-4 mt-1 text-blue-600 rounded"
-                required
               />
               <label htmlFor="terms" className="text-sm text-gray-600">
                 Tôi đồng ý với{" "}

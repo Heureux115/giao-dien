@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router";
-import { LayoutDashboard, Calendar, Wallet, ChevronLeft, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Calendar, Wallet, ChevronLeft, Settings, LogOut, Star } from "lucide-react";
 
 export default function DoctorLayout() {
   const location = useLocation();
@@ -9,6 +9,7 @@ export default function DoctorLayout() {
     { path: "/doctor", icon: LayoutDashboard, label: "Dashboard" },
     { path: "/doctor/appointments", icon: Calendar, label: "Lịch hẹn" },
     { path: "/doctor/wallet", icon: Wallet, label: "Ví" },
+    { path: "/doctor/reviews", icon: Star, label: "Đánh giá" },
     { path: "/doctor/settings", icon: Settings, label: "Cài đặt" },
   ];
 

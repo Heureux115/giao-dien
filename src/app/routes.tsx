@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 
 // Auth & Landing pages
 import Landing from "./pages/Landing";
@@ -6,7 +6,7 @@ import Login from "./pages/Login";
 import LoginPatient from "./pages/LoginPatient";
 import LoginDoctor from "./pages/LoginDoctor";
 import LoginAdmin from "./pages/LoginAdmin";
-import LoginAISpecialist from "./pages/LoginAISpecialist";
+import LoginExpert from "./pages/LoginExpert";
 import Register from "./pages/Register";
 import RegisterDoctor from "./pages/RegisterDoctor";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -42,14 +42,7 @@ import ConsultationReport from "./pages/doctor/ConsultationReport";
 import DoctorWallet from "./pages/doctor/DoctorWallet";
 import DoctorWithdraw from "./pages/doctor/DoctorWithdraw";
 import DoctorSettings from "./pages/doctor/DoctorSettings";
-
-// AI Specialist pages
-import AISpecialistDashboard from "./pages/ai-specialist/AISpecialistDashboard";
-import AIStats from "./pages/ai-specialist/AIStats";
-import AIErrorCases from "./pages/ai-specialist/AIErrorCases";
-import AIModelUpdate from "./pages/ai-specialist/AIModelUpdate";
-import AddTrainingData from "./pages/ai-specialist/AddTrainingData";
-import AddRule from "./pages/ai-specialist/AddRule";
+import DoctorReviews from "./pages/doctor/DoctorReviews";
 
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -58,11 +51,18 @@ import SystemStats from "./pages/admin/SystemStats";
 import ManageDoctors from "./pages/admin/ManageDoctors";
 import ManageClinics from "./pages/admin/ManageClinics";
 import RequestMoreInfo from "./pages/admin/RequestMoreInfo";
+import UIUXSpecialistLayout from "./layouts/UIUXSpecialistLayout";
+import UIUXDashboard from "./pages/uiux-specialist/Dashboard";
+import DesignAudit from "./pages/uiux-specialist/DesignAudit";
+import PainPoints from "./pages/uiux-specialist/PainPoints";
+import ReportIssue from "./pages/uiux-specialist/ReportIssue";
+import Recommendations from "./pages/uiux-specialist/Recommendations";
+import AddRecommendation from "./pages/uiux-specialist/AddRecommendation";
+import AIFeedback from "./pages/uiux-specialist/AIFeedback";
 
 // Layouts
 import PatientLayout from "./layouts/PatientLayout";
 import DoctorLayout from "./layouts/DoctorLayout";
-import AISpecialistLayout from "./layouts/AISpecialistLayout";
 import AdminLayout from "./layouts/AdminLayout";
 
 // Other
@@ -90,8 +90,8 @@ export const router = createBrowserRouter([
     Component: LoginAdmin,
   },
   {
-    path: "/login/ai-specialist",
-    Component: LoginAISpecialist,
+    path: "/login/expert",
+    Component: LoginExpert,
   },
   {
     path: "/register",
@@ -147,20 +147,8 @@ export const router = createBrowserRouter([
       { path: "consult/:appointmentId/report", Component: ConsultationReport },
       { path: "wallet", Component: DoctorWallet },
       { path: "withdraw", Component: DoctorWithdraw },
+      { path: "reviews", Component: DoctorReviews },
       { path: "settings", Component: DoctorSettings },
-    ],
-  },
-  // AI Specialist routes
-  {
-    path: "/ai-specialist",
-    Component: AISpecialistLayout,
-    children: [
-      { index: true, Component: AISpecialistDashboard },
-      { path: "stats", Component: AIStats },
-      { path: "errors", Component: AIErrorCases },
-      { path: "errors/:errorId/update", Component: AIModelUpdate },
-      { path: "add-training-data", Component: AddTrainingData },
-      { path: "add-rule", Component: AddRule },
     ],
   },
   // Admin routes
@@ -175,6 +163,23 @@ export const router = createBrowserRouter([
       { path: "manage-clinics", Component: ManageClinics },
       { path: "stats", Component: SystemStats },
     ],
+  },
+  {
+    path: "/uiux-specialist",
+    Component: UIUXSpecialistLayout,
+    children: [
+      { index: true, Component: UIUXDashboard },
+      { path: "audit", Component: DesignAudit },
+      { path: "pain-points", Component: PainPoints },
+      { path: "report-issue", Component: ReportIssue },
+      { path: "recommendations", Component: Recommendations },
+      { path: "recommendations/new", Component: AddRecommendation },
+      { path: "ai-feedback", Component: AIFeedback },
+    ],
+  },
+  {
+    path: "/expert",
+    element: <Navigate to="/uiux-specialist" replace />,
   },
   {
     path: "*",

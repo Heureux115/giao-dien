@@ -44,24 +44,6 @@ export default function RegisterDoctor() {
   ];
 
   const handleNext = () => {
-    if (step === 1) {
-      if (!formData.fullName || !formData.email || !formData.phone || !formData.password) {
-        alert("Vui lòng điền đầy đủ thông tin!");
-        return;
-      }
-      if (formData.password !== formData.confirmPassword) {
-        alert("Mật khẩu xác nhận không khớp!");
-        return;
-      }
-    }
-
-    if (step === 2) {
-      if (!formData.specialty || !formData.experience || !formData.education || !formData.licenseNumber) {
-        alert("Vui lòng điền đầy đủ thông tin chuyên môn!");
-        return;
-      }
-    }
-
     setStep(step + 1);
   };
 
@@ -71,14 +53,6 @@ export default function RegisterDoctor() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!formData.agreeToTerms) {
-      alert("Vui lòng đồng ý với điều khoản sử dụng!");
-      return;
-    }
-
-    // Mock registration
-    alert("Đăng ký thành công! Hồ sơ của bạn đang được xem xét. Chúng tôi sẽ liên hệ trong vòng 1-2 ngày làm việc.");
     navigate("/login");
   };
 
@@ -155,7 +129,7 @@ export default function RegisterDoctor() {
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Họ và tên <span className="text-red-500">*</span>
+                    Họ và tên
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -165,7 +139,6 @@ export default function RegisterDoctor() {
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                       placeholder="BS. Nguyễn Văn A"
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
-                      required
                     />
                   </div>
                 </div>
@@ -173,7 +146,7 @@ export default function RegisterDoctor() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email <span className="text-red-500">*</span>
+                      Email
                     </label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -183,14 +156,13 @@ export default function RegisterDoctor() {
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="doctor@example.com"
                         className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        required
                       />
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Số điện thoại <span className="text-red-500">*</span>
+                      Số điện thoại
                     </label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -200,7 +172,6 @@ export default function RegisterDoctor() {
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="0901234567"
                         className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        required
                       />
                     </div>
                   </div>
@@ -208,7 +179,7 @@ export default function RegisterDoctor() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Mật khẩu <span className="text-red-500">*</span>
+                    Mật khẩu
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -218,8 +189,6 @@ export default function RegisterDoctor() {
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                       placeholder="Tối thiểu 8 ký tự"
                       className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
-                      required
-                      minLength={8}
                     />
                     <button
                       type="button"
@@ -233,7 +202,7 @@ export default function RegisterDoctor() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Xác nhận mật khẩu <span className="text-red-500">*</span>
+                    Xác nhận mật khẩu
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -243,7 +212,6 @@ export default function RegisterDoctor() {
                       onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                       placeholder="Nhập lại mật khẩu"
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
-                      required
                     />
                   </div>
                 </div>
@@ -256,13 +224,12 @@ export default function RegisterDoctor() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Chuyên khoa <span className="text-red-500">*</span>
+                      Chuyên khoa
                     </label>
                     <select
                       value={formData.specialty}
                       onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
-                      required
                     >
                       <option value="">Chọn chuyên khoa</option>
                       {specialties.map((spec) => (
@@ -273,7 +240,7 @@ export default function RegisterDoctor() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Số năm kinh nghiệm <span className="text-red-500">*</span>
+                      Số năm kinh nghiệm
                     </label>
                     <input
                       type="number"
@@ -282,14 +249,13 @@ export default function RegisterDoctor() {
                       placeholder="10"
                       min="0"
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
-                      required
                     />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Học vấn <span className="text-red-500">*</span>
+                    Học vấn
                   </label>
                   <div className="relative">
                     <GraduationCap className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
@@ -299,7 +265,6 @@ export default function RegisterDoctor() {
                       onChange={(e) => setFormData({ ...formData, education: e.target.value })}
                       placeholder="Đại học Y Hà Nội"
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
-                      required
                     />
                   </div>
                 </div>
@@ -319,7 +284,7 @@ export default function RegisterDoctor() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Số chứng chỉ hành nghề <span className="text-red-500">*</span>
+                    Số chứng chỉ hành nghề
                   </label>
                   <div className="relative">
                     <FileText className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
@@ -329,7 +294,6 @@ export default function RegisterDoctor() {
                       onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
                       placeholder="VN-12345678"
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
-                      required
                     />
                   </div>
                 </div>
@@ -422,7 +386,6 @@ export default function RegisterDoctor() {
                     checked={formData.agreeToTerms}
                     onChange={(e) => setFormData({ ...formData, agreeToTerms: e.target.checked })}
                     className="w-4 h-4 mt-1 text-teal-600 rounded"
-                    required
                   />
                   <label htmlFor="terms" className="text-sm text-gray-600">
                     Tôi xác nhận rằng tất cả thông tin trên là chính xác và đồng ý với{" "}

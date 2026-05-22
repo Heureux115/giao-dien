@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { User, Stethoscope, Shield, Brain } from "lucide-react";
+import { ClipboardCheck, Shield, Stethoscope, User } from "lucide-react";
 
 export default function Login() {
   return (
@@ -18,7 +18,7 @@ export default function Login() {
 
         <div className="grid md:grid-cols-2 gap-6 mb-6">
           <Link
-            to="/patient"
+            to="/login/patient"
             className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow group"
           >
             <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
@@ -29,7 +29,7 @@ export default function Login() {
           </Link>
 
           <Link
-            to="/doctor"
+            to="/login/doctor"
             className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow group"
           >
             <div className="w-16 h-16 bg-teal-100 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
@@ -40,7 +40,7 @@ export default function Login() {
           </Link>
 
           <Link
-            to="/admin"
+            to="/login/admin"
             className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow group"
           >
             <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
@@ -51,23 +51,24 @@ export default function Login() {
           </Link>
 
           <Link
-            to="/ai-specialist"
+            to="/login/expert"
             className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow group"
           >
             <div className="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
-              <Brain className="w-8 h-8 text-purple-600" />
+              <ClipboardCheck className="w-8 h-8 text-purple-600" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 text-center mb-2">Chuyên gia AI</h3>
-            <p className="text-gray-600 text-center text-sm">Phân tích và cải thiện mô hình AI</p>
+            <h3 className="text-xl font-bold text-gray-900 text-center mb-2">Chuyên gia</h3>
+            <p className="text-gray-600 text-center text-sm">Kiểm thử pain point, usability và đề xuất cải thiện thiết kế</p>
           </Link>
+
         </div>
 
         <div className="text-center">
           <p className="text-sm text-gray-600">
             Chưa có tài khoản?{" "}
-            <button type="button" className="text-blue-600 font-medium hover:underline">
+            <Link to="/register" className="text-blue-600 font-medium hover:underline">
               Đăng ký ngay
-            </button>
+            </Link>
           </p>
         </div>
       </div>
