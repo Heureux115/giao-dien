@@ -132,8 +132,6 @@ export default function LoginPatient() {
             <Link to="/login/doctor" className="text-sm text-blue-600 hover:underline">Bác sĩ</Link>
             <span className="text-gray-400">|</span>
             <Link to="/login/admin" className="text-sm text-blue-600 hover:underline">Quản trị viên</Link>
-            <span className="text-gray-400">|</span>
-            <Link to="/login/expert" className="text-sm text-blue-600 hover:underline">Chuyên gia</Link>
           </div>
         </div>
       </div>

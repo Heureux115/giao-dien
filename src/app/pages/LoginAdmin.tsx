@@ -100,8 +100,6 @@ export default function LoginAdmin() {
             <Link to="/login/patient" className="text-sm text-gray-700 hover:underline">Bệnh nhân</Link>
             <span className="text-gray-400">|</span>
             <Link to="/login/doctor" className="text-sm text-gray-700 hover:underline">Bác sĩ</Link>
-            <span className="text-gray-400">|</span>
-            <Link to="/login/expert" className="text-sm text-gray-700 hover:underline">Chuyên gia</Link>
           </div>
         </div>
       </div>

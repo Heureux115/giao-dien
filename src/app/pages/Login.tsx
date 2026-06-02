@@ -1,10 +1,37 @@
 import { Link } from "react-router";
-import { ClipboardCheck, Shield, Stethoscope, User } from "lucide-react";
+import { Shield, Stethoscope, User } from "lucide-react";
+
+const roles = [
+  {
+    to: "/login/patient",
+    title: "Bệnh nhân",
+    description: "Tư vấn sức khỏe và đặt lịch khám",
+    icon: User,
+    iconWrap: "bg-blue-100",
+    iconColor: "text-blue-600",
+  },
+  {
+    to: "/login/doctor",
+    title: "Bác sĩ",
+    description: "Quản lý lịch hẹn và tư vấn bệnh nhân",
+    icon: Stethoscope,
+    iconWrap: "bg-teal-100",
+    iconColor: "text-teal-600",
+  },
+  {
+    to: "/login/admin",
+    title: "Quản trị viên",
+    description: "Quản lý hệ thống và duyệt bác sĩ",
+    icon: Shield,
+    iconWrap: "bg-gray-100",
+    iconColor: "text-gray-700",
+  },
+];
 
 export default function Login() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-5xl">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
             <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
@@ -16,51 +43,24 @@ export default function Login() {
           <p className="text-gray-600">Chọn vai trò của bạn để tiếp tục</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <Link
-            to="/login/patient"
-            className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow group"
-          >
-            <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
-              <User className="w-8 h-8 text-blue-600" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 text-center mb-2">Bệnh nhân</h3>
-            <p className="text-gray-600 text-center text-sm">Tư vấn sức khỏe và đặt lịch khám</p>
-          </Link>
+        <div className="grid gap-6 md:grid-cols-3 mb-6">
+          {roles.map((role) => {
+            const Icon = role.icon;
 
-          <Link
-            to="/login/doctor"
-            className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow group"
-          >
-            <div className="w-16 h-16 bg-teal-100 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
-              <Stethoscope className="w-8 h-8 text-teal-600" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 text-center mb-2">Bác sĩ</h3>
-            <p className="text-gray-600 text-center text-sm">Quản lý lịch hẹn và tư vấn bệnh nhân</p>
-          </Link>
-
-          <Link
-            to="/login/admin"
-            className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow group"
-          >
-            <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
-              <Shield className="w-8 h-8 text-gray-700" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 text-center mb-2">Quản trị viên</h3>
-            <p className="text-gray-600 text-center text-sm">Quản lý hệ thống và duyệt bác sĩ</p>
-          </Link>
-
-          <Link
-            to="/login/expert"
-            className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow group"
-          >
-            <div className="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
-              <ClipboardCheck className="w-8 h-8 text-purple-600" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 text-center mb-2">Chuyên gia</h3>
-            <p className="text-gray-600 text-center text-sm">Kiểm thử pain point, usability và đề xuất cải thiện thiết kế</p>
-          </Link>
-
+            return (
+              <Link
+                key={role.to}
+                to={role.to}
+                className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow group min-h-[220px] flex flex-col justify-center"
+              >
+                <div className={`w-16 h-16 ${role.iconWrap} rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform`}>
+                  <Icon className={`w-8 h-8 ${role.iconColor}`} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 text-center mb-2">{role.title}</h3>
+                <p className="text-gray-600 text-center text-sm">{role.description}</p>
+              </Link>
+            );
+          })}
         </div>
 
         <div className="text-center">

@@ -107,8 +107,6 @@ export default function LoginDoctor() {
             <Link to="/login/patient" className="text-sm text-teal-600 hover:underline">Bệnh nhân</Link>
             <span className="text-gray-400">|</span>
             <Link to="/login/admin" className="text-sm text-teal-600 hover:underline">Quản trị viên</Link>
-            <span className="text-gray-400">|</span>
-            <Link to="/login/expert" className="text-sm text-teal-600 hover:underline">Chuyên gia</Link>
           </div>
         </div>
       </div>
