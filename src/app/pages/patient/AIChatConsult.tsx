@@ -9,6 +9,25 @@ interface Message {
   timestamp: Date;
 }
 
+const commonSymptoms = [
+  { label: "Đau đầu", icon: "🤕" },
+  { label: "Sốt", icon: "🌡️" },
+  { label: "Ho / Đau họng", icon: "😷" },
+  { label: "Đau bụng / Buồn nôn", icon: "🤢" },
+  { label: "Khó thở / Tức ngực", icon: "🫁" },
+  { label: "Mệt mỏi", icon: "🥱" },
+  { label: "Đau mỏi cơ khớp", icon: "💪" },
+  { label: "Mẩn ngứa ngoài da", icon: "🔴" }
+];
+
+const durations = ["Mới hôm nay", "2-3 ngày nay", "Khoảng 1 tuần", "Trên 2 tuần"];
+const severities = ["Nhẹ (1-3)", "Trung bình (4-7)", "Nặng (8-10)"];
+const histories = ["Không có", "Tim mạch / Huyết áp", "Tiểu đường", "Hen suyễn / Hô hấp"];
+
+const medications = ["Chưa dùng thuốc gì", "Đã uống giảm đau/hạ sốt", "Đã dùng thuốc theo đơn cũ"];
+const aggravations = ["Khi vận động nhiều", "Khi nằm nghỉ/Ban đêm", "Liên tục không giảm"];
+const fevers = ["Không bị sốt", "Sốt nhẹ (< 38°C)", "Sốt cao (≥ 38.5°C)"];
+
 export default function AIChatConsult() {
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([
@@ -23,18 +42,47 @@ export default function AIChatConsult() {
   const [isLoading, setIsLoading] = useState(false);
   const [questionCount, setQuestionCount] = useState(0);
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  // States for selection suggestions
+  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+  const [selectedDuration, setSelectedDuration] = useState("");
+  const [selectedSeverity, setSelectedSeverity] = useState("");
+  const [selectedHistory, setSelectedHistory] = useState("");
+  const [selectedMedication, setSelectedMedication] = useState("");
+  const [selectedAggravation, setSelectedAggravation] = useState("");
+  const [selectedFever, setSelectedFever] = useState("");
+
+  const handleToggleSymptom = (symptom: string) => {
+    setSelectedSymptoms((prev) => {
+      const isSelected = prev.includes(symptom);
+      const updated = isSelected
+        ? prev.filter((item) => item !== symptom)
+        : [...prev, symptom];
+      
+      // Auto pre-fill input text
+      if (updated.length > 0) {
+        setInput(`Tôi đang có các triệu chứng: ${updated.join(", ")}`);
+      } else {
+        setInput("");
+      }
+      return updated;
+    });
+  };
+
+  const handleSend = async (customText?: string) => {
+    const messageText = customText !== undefined ? customText : input;
+    if (!messageText.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
       type: "user",
-      content: input,
+      content: messageText,
       timestamp: new Date(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setInput("");
+    if (customText === undefined) {
+      setInput("");
+    }
     setIsLoading(true);
 
     // Simulate AI response
@@ -56,9 +104,16 @@ export default function AIChatConsult() {
           // Randomly redirect to one of 3 result pages
           const results = ["/patient/result/light", "/patient/result/need-doctor", "/patient/result/emergency"];
           const randomResult = results[Math.floor(Math.random() * results.length)];
+          
+          // Compile all user responses to pass in state
+          const allUserMessages = [...messages, userMessage]
+            .filter((m) => m.type === "user")
+            .map((m) => m.content.replace(/•/g, "").replace(/\n/g, ", "))
+            .join(", ");
+
           navigate(randomResult, {
             state: {
-              symptoms: messages.filter(m => m.type === "user").map(m => m.content).join(", ")
+              symptoms: allUserMessages
             }
           });
         }, 2000);
@@ -74,6 +129,18 @@ export default function AIChatConsult() {
       setMessages((prev) => [...prev, aiMessage]);
       setIsLoading(false);
     }, 1000);
+  };
+
+  const handleSendDetails = () => {
+    if (!selectedDuration || !selectedSeverity || !selectedHistory || isLoading) return;
+    const details = `• Thời gian xuất hiện: ${selectedDuration}\n• Mức độ khó chịu: ${selectedSeverity}\n• Tiền sử bệnh lý: ${selectedHistory}`;
+    handleSend(details);
+  };
+
+  const handleSendMoreAnswers = () => {
+    if (!selectedMedication || !selectedAggravation || !selectedFever || isLoading) return;
+    const details = `• Sử dụng thuốc: ${selectedMedication}\n• Triệu chứng tăng lên: ${selectedAggravation}\n• Tình trạng sốt: ${selectedFever}`;
+    handleSend(details);
   };
 
   return (
@@ -152,6 +219,201 @@ export default function AIChatConsult() {
         )}
       </div>
 
+      {/* Suggestion Options Panel */}
+      {!isLoading && (
+        <>
+          {/* Step 0 Suggestions */}
+          {questionCount === 0 && (
+            <div className="bg-white border-t border-gray-100 p-4 transition-all">
+              <div className="max-w-4xl mx-auto">
+                <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-2">💡 Gợi ý triệu chứng phổ biến (Tích chọn)</p>
+                <div className="flex flex-wrap gap-2">
+                  {commonSymptoms.map((s) => {
+                    const isSelected = selectedSymptoms.includes(s.label);
+                    return (
+                      <button
+                        key={s.label}
+                        onClick={() => handleToggleSymptom(s.label)}
+                        className={`flex items-center gap-1.5 text-xs px-3 py-2 rounded-full border transition-all duration-200 ${
+                          isSelected
+                            ? "bg-blue-100 border-blue-500 text-blue-700 font-semibold shadow-sm scale-105"
+                            : "border-gray-200 hover:border-gray-300 text-gray-600 hover:bg-gray-50"
+                        }`}
+                      >
+                        <span>{s.icon}</span>
+                        <span>{s.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 1 Suggestions */}
+          {questionCount === 1 && (
+            <div className="bg-white border-t border-gray-100 p-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <div className="max-w-4xl mx-auto space-y-4">
+                <p className="text-xs font-semibold text-purple-600 uppercase tracking-wider">💡 Gợi ý trả lời nhanh (Tích chọn cả 3 mục)</p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Column 1: Duration */}
+                  <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                    <span className="text-xs font-semibold text-gray-700 block mb-2">1. Thời gian xuất hiện</span>
+                    <div className="flex flex-wrap gap-2">
+                      {durations.map((d) => (
+                        <button
+                          key={d}
+                          onClick={() => setSelectedDuration(d)}
+                          className={`text-xs px-3 py-2 rounded-lg border transition-all w-full text-left ${
+                            selectedDuration === d 
+                              ? "bg-blue-50 border-blue-500 text-blue-700 font-semibold shadow-sm"
+                              : "bg-white border-gray-200 hover:border-gray-300 text-gray-600 hover:bg-gray-50"
+                          }`}
+                        >
+                          {d}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Column 2: Severity */}
+                  <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                    <span className="text-xs font-semibold text-gray-700 block mb-2">2. Mức độ đau / Khó chịu</span>
+                    <div className="flex flex-wrap gap-2">
+                      {severities.map((s) => (
+                        <button
+                          key={s}
+                          onClick={() => setSelectedSeverity(s)}
+                          className={`text-xs px-3 py-2 rounded-lg border transition-all w-full text-left ${
+                            selectedSeverity === s
+                              ? "bg-blue-50 border-blue-500 text-blue-700 font-semibold shadow-sm"
+                              : "bg-white border-gray-200 hover:border-gray-300 text-gray-600 hover:bg-gray-50"
+                          }`}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Column 3: History */}
+                  <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                    <span className="text-xs font-semibold text-gray-700 block mb-2">3. Tiền sử bệnh lý</span>
+                    <div className="flex flex-wrap gap-2">
+                      {histories.map((h) => (
+                        <button
+                          key={h}
+                          onClick={() => setSelectedHistory(h)}
+                          className={`text-xs px-3 py-2 rounded-lg border transition-all w-full text-left ${
+                            selectedHistory === h
+                              ? "bg-blue-50 border-blue-500 text-blue-700 font-semibold shadow-sm"
+                              : "bg-white border-gray-200 hover:border-gray-300 text-gray-600 hover:bg-gray-50"
+                          }`}
+                        >
+                          {h}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end pt-2">
+                  <button
+                    onClick={handleSendDetails}
+                    disabled={!selectedDuration || !selectedSeverity || !selectedHistory || isLoading}
+                    className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl text-xs font-bold hover:shadow-md disabled:from-gray-300 disabled:to-gray-300 disabled:cursor-not-allowed transition-all"
+                  >
+                    Xác nhận & Gửi thông tin chi tiết
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 2 Suggestions */}
+          {questionCount === 2 && (
+            <div className="bg-white border-t border-gray-100 p-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <div className="max-w-4xl mx-auto space-y-4">
+                <p className="text-xs font-semibold text-purple-600 uppercase tracking-wider">💡 Gợi ý trả lời nhanh (Tích chọn cả 3 mục)</p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Column 1: Medication */}
+                  <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                    <span className="text-xs font-semibold text-gray-700 block mb-2">1. Tình trạng dùng thuốc</span>
+                    <div className="flex flex-wrap gap-2">
+                      {medications.map((m) => (
+                        <button
+                          key={m}
+                          onClick={() => setSelectedMedication(m)}
+                          className={`text-xs px-3 py-2 rounded-lg border transition-all w-full text-left ${
+                            selectedMedication === m 
+                              ? "bg-blue-50 border-blue-500 text-blue-700 font-semibold shadow-sm"
+                              : "bg-white border-gray-200 hover:border-gray-300 text-gray-600 hover:bg-gray-50"
+                          }`}
+                        >
+                          {m}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Column 2: Aggravation */}
+                  <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                    <span className="text-xs font-semibold text-gray-700 block mb-2">2. Triệu chứng tăng khi</span>
+                    <div className="flex flex-wrap gap-2">
+                      {aggravations.map((a) => (
+                        <button
+                          key={a}
+                          onClick={() => setSelectedAggravation(a)}
+                          className={`text-xs px-3 py-2 rounded-lg border transition-all w-full text-left ${
+                            selectedAggravation === a
+                              ? "bg-blue-50 border-blue-500 text-blue-700 font-semibold shadow-sm"
+                              : "bg-white border-gray-200 hover:border-gray-300 text-gray-600 hover:bg-gray-50"
+                          }`}
+                        >
+                          {a}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Column 3: Fever */}
+                  <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                    <span className="text-xs font-semibold text-gray-700 block mb-2">3. Tình trạng sốt</span>
+                    <div className="flex flex-wrap gap-2">
+                      {fevers.map((f) => (
+                        <button
+                          key={f}
+                          onClick={() => setSelectedFever(f)}
+                          className={`text-xs px-3 py-2 rounded-lg border transition-all w-full text-left ${
+                            selectedFever === f
+                              ? "bg-blue-50 border-blue-500 text-blue-700 font-semibold shadow-sm"
+                              : "bg-white border-gray-200 hover:border-gray-300 text-gray-600 hover:bg-gray-50"
+                          }`}
+                        >
+                          {f}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end pt-2">
+                  <button
+                    onClick={handleSendMoreAnswers}
+                    disabled={!selectedMedication || !selectedAggravation || !selectedFever || isLoading}
+                    className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl text-xs font-bold hover:shadow-md disabled:from-gray-300 disabled:to-gray-300 disabled:cursor-not-allowed transition-all"
+                  >
+                    Xác nhận & Gửi câu trả lời
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
       {/* Input */}
       <div className="bg-white border-t border-gray-200 p-4">
         <div className="max-w-4xl mx-auto flex gap-2">
@@ -160,12 +422,12 @@ export default function AIChatConsult() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleSend()}
-            placeholder="Nhập triệu chứng của bạn..."
+            placeholder="Nhập triệu chứng hoặc tích chọn các gợi ý bên trên..."
             className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={isLoading}
           />
           <button
-            onClick={handleSend}
+            onClick={() => handleSend()}
             disabled={!input.trim() || isLoading}
             className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
           >
