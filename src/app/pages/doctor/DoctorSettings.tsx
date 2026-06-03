@@ -76,7 +76,7 @@ export default function DoctorSettings() {
   ];
 
   return (
-    <div className="p-6 md:p-8">
+    <div className="max-w-3xl mx-auto p-6 md:p-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Cài đặt</h1>
 
       {/* Horizontal Tabs */}
@@ -101,7 +101,7 @@ export default function DoctorSettings() {
       </div>
 
       {/* Content */}
-      <div className="bg-white rounded-xl shadow-sm p-6 max-w-4xl">
+      <div className="bg-white rounded-xl shadow-sm p-6 w-full">
             {/* Profile Tab */}
             {activeTab === "profile" && (
               <form onSubmit={handleSaveProfile}>

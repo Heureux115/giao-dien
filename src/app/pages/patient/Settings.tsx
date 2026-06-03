@@ -76,7 +76,7 @@ export default function Settings() {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Cài đặt</h1>
 
       {/* Horizontal Tabs */}
@@ -101,7 +101,7 @@ export default function Settings() {
       </div>
 
       {/* Content */}
-      <div className="bg-white rounded-xl shadow-sm p-6 max-w-4xl">
+      <div className="bg-white rounded-xl shadow-sm p-6 w-full">
             {/* Profile Tab */}
             {activeTab === "profile" && (
               <form onSubmit={handleSaveProfile}>
@@ -267,11 +267,11 @@ export default function Settings() {
 
             {/* Password Tab */}
             {activeTab === "password" && (
-              <form onSubmit={handleChangePassword}>
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Đổi mật khẩu</h2>
-                <p className="text-gray-600 mb-6">Cập nhật mật khẩu để bảo mật tài khoản của bạn</p>
+              <form onSubmit={handleChangePassword} className="max-w-md mx-auto">
+                <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">Đổi mật khẩu</h2>
+                <p className="text-gray-600 mb-8 text-center">Cập nhật mật khẩu để bảo mật tài khoản của bạn</p>
 
-                <div className="space-y-6 max-w-md">
+                <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Mật khẩu hiện tại *
@@ -343,7 +343,7 @@ export default function Settings() {
                   </div>
                 </div>
 
-                <div className="flex gap-4 mt-8">
+                <div className="flex justify-center gap-4 mt-8">
                   <button
                     type="submit"
                     className="flex items-center gap-2 px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors"
@@ -364,10 +364,10 @@ export default function Settings() {
 
             {/* Payment Tab */}
             {activeTab === "payment" && (
-              <form onSubmit={handleSavePayment}>
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Phương thức thanh toán</h2>
+              <form onSubmit={handleSavePayment} className="max-w-md mx-auto">
+                <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">Phương thức thanh toán</h2>
 
-                <div className="space-y-6 max-w-md">
+                <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Số thẻ
@@ -448,13 +448,15 @@ export default function Settings() {
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  className="mt-6 flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700"
-                >
+                <div className="flex justify-center mt-8">
+                  <button
+                    type="submit"
+                    className="flex items-center gap-2 px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700"
+                  >
                   <Save className="w-5 h-5" />
                   Lưu thông tin
-                </button>
+                  </button>
+                </div>
               </form>
             )}
       </div>
