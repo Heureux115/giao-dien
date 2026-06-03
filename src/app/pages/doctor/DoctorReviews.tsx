@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { MessageSquare, Search, Star, TrendingUp, User } from "lucide-react";
+import { MessageSquare, Search, Star, TrendingUp, User, Clock } from "lucide-react";
 
 const initialReviews = [
   {
@@ -57,25 +57,39 @@ const initialReviews = [
 export default function DoctorReviews() {
   const [reviews, setReviews] = useState(initialReviews);
   const [ratingFilter, setRatingFilter] = useState("all");
+  const [quickFilter, setQuickFilter] = useState<"all" | "replied" | "pending" | "satisfied">("all");
   const [query, setQuery] = useState("");
   const [replyingId, setReplyingId] = useState<number | null>(null);
   const [replyDrafts, setReplyDrafts] = useState<Record<number, string>>({});
 
   const filteredReviews = reviews.filter((review) => {
     const matchesRating = ratingFilter === "all" || review.rating === Number(ratingFilter);
+    const matchesQuickFilter = 
+      quickFilter === "all" ? true :
+      quickFilter === "replied" ? review.replied : 
+      quickFilter === "pending" ? !review.replied :
+      quickFilter === "satisfied" ? review.rating >= 4 : true;
+    
     const normalizedQuery = query.trim().toLowerCase();
     const matchesQuery =
       !normalizedQuery ||
       review.patient.toLowerCase().includes(normalizedQuery) ||
       review.comment.toLowerCase().includes(normalizedQuery) ||
       review.appointment.toLowerCase().includes(normalizedQuery);
-    return matchesRating && matchesQuery;
+      
+    return matchesRating && matchesQuickFilter && matchesQuery;
   });
 
   const averageRating = useMemo(
     () => reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length,
-    []
+    [reviews]
   );
+
+  const satisfiedCount = reviews.filter((review) => review.rating >= 4).length;
+  const satisfiedPercentage = reviews.length > 0 ? Math.round((satisfiedCount / reviews.length) * 100) : 0;
+
+  const repliedCount = reviews.filter((review) => review.replied).length;
+  const pendingReplyCount = reviews.length - repliedCount;
 
   const ratingCounts = [5, 4, 3, 2, 1].map((rating) => ({
     rating,
@@ -104,25 +118,60 @@ export default function DoctorReviews() {
       </div>
 
       <div className="grid lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-gradient-to-br from-teal-600 to-blue-600 text-white rounded-xl p-6">
-          <Star className="w-8 h-8 mb-4 fill-current" />
-          <p className="text-4xl font-bold mb-1">{averageRating.toFixed(1)}</p>
-          <p className="text-sm opacity-90">Điểm trung bình</p>
+        {/* Card 1: Điểm trung bình (Tất cả) */}
+        <div 
+          onClick={() => setQuickFilter("all")}
+          className={`rounded-xl p-6 cursor-pointer transition-all ${
+            quickFilter === "all"
+              ? "bg-gradient-to-br from-teal-600 to-blue-600 text-white shadow-md"
+              : "bg-white text-gray-900 shadow-sm hover:shadow-md"
+          }`}
+        >
+          <Star className={`w-8 h-8 mb-4 fill-current ${quickFilter === "all" ? "text-white" : "text-yellow-500"}`} />
+          <p className="text-3xl font-bold mb-1">{averageRating.toFixed(1)}</p>
+          <p className={`text-sm ${quickFilter === "all" ? "opacity-90" : "text-gray-600"}`}>Điểm trung bình</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <MessageSquare className="w-8 h-8 text-teal-600 mb-4" />
-          <p className="text-3xl font-bold text-gray-900 mb-1">{reviews.length}</p>
-          <p className="text-sm text-gray-600">Tổng đánh giá</p>
+        
+        {/* Card 2: Hài lòng (Filter) */}
+        <div 
+          onClick={() => setQuickFilter(quickFilter === "satisfied" ? "all" : "satisfied")}
+          className={`rounded-xl p-6 cursor-pointer transition-all ${
+            quickFilter === "satisfied"
+              ? "bg-gradient-to-br from-emerald-400 to-emerald-500 text-white shadow-md"
+              : "bg-white text-gray-900 shadow-sm hover:shadow-md"
+          }`}
+        >
+          <TrendingUp className={`w-8 h-8 mb-4 ${quickFilter === "satisfied" ? "text-white" : "text-green-600"}`} />
+          <p className="text-3xl font-bold mb-1">{satisfiedPercentage}%</p>
+          <p className={`text-sm ${quickFilter === "satisfied" ? "opacity-90" : "text-gray-600"}`}>Hài lòng (từ 4 sao)</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <TrendingUp className="w-8 h-8 text-green-600 mb-4" />
-          <p className="text-3xl font-bold text-gray-900 mb-1">92%</p>
-          <p className="text-sm text-gray-600">Hài lòng</p>
+        
+        {/* Card 3: Đã phản hồi (Filter) */}
+        <div 
+          onClick={() => setQuickFilter(quickFilter === "replied" ? "all" : "replied")}
+          className={`rounded-xl p-6 cursor-pointer transition-all ${
+            quickFilter === "replied" 
+              ? "bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md" 
+              : "bg-white text-gray-900 shadow-sm hover:shadow-md"
+          }`}
+        >
+          <MessageSquare className={`w-8 h-8 mb-4 ${quickFilter === "replied" ? "text-white" : "text-blue-600"}`} />
+          <p className="text-3xl font-bold mb-1">{repliedCount}</p>
+          <p className={`text-sm ${quickFilter === "replied" ? "opacity-90" : "text-gray-600"}`}>Đã phản hồi</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <User className="w-8 h-8 text-blue-600 mb-4" />
-          <p className="text-3xl font-bold text-gray-900 mb-1">3</p>
-          <p className="text-sm text-gray-600">Đã phản hồi</p>
+        
+        {/* Card 4: Cần phản hồi (Filter) */}
+        <div 
+          onClick={() => setQuickFilter(quickFilter === "pending" ? "all" : "pending")}
+          className={`rounded-xl p-6 cursor-pointer transition-all ${
+            quickFilter === "pending" 
+              ? "bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-md" 
+              : "bg-white text-gray-900 shadow-sm hover:shadow-md"
+          }`}
+        >
+          <Clock className={`w-8 h-8 mb-4 ${quickFilter === "pending" ? "text-white" : "text-orange-500"}`} />
+          <p className="text-3xl font-bold mb-1">{pendingReplyCount}</p>
+          <p className={`text-sm ${quickFilter === "pending" ? "opacity-90" : "text-gray-600"}`}>Cần phản hồi</p>
         </div>
       </div>
 

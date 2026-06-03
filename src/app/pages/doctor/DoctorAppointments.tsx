@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { Calendar, Clock, User, CheckCircle, XCircle, Video } from "lucide-react";
 import { useState } from "react";
 
-const appointments = [
+const initialAppointments = [
   { id: 1, date: "2026-05-05", time: "09:00", patient: "Nguyễn Văn A", phone: "0901234567", symptoms: "Đau đầu, chóng mặt", status: "confirmed", fee: 300000 },
   { id: 2, date: "2026-05-05", time: "10:00", patient: "Trần Thị B", phone: "0902345678", symptoms: "Ho, sốt nhẹ", status: "confirmed", fee: 300000 },
   { id: 3, date: "2026-05-05", time: "14:00", patient: "Lê Văn C", phone: "0903456789", symptoms: "Đau bụng", status: "pending", fee: 300000 },
@@ -12,6 +12,7 @@ const appointments = [
 ];
 
 export default function DoctorAppointments() {
+  const [appointments, setAppointments] = useState(initialAppointments);
   const [filter, setFilter] = useState<string>("all");
 
   const filteredAppointments = appointments.filter(apt => {
@@ -20,12 +21,12 @@ export default function DoctorAppointments() {
   });
 
   const handleAccept = (id: number) => {
-    alert(`Đã chấp nhận lịch hẹn #${id}`);
+    setAppointments(prev => prev.map(apt => apt.id === id ? { ...apt, status: "confirmed" } : apt));
   };
 
   const handleReject = (id: number) => {
     if (confirm("Bạn có chắc muốn từ chối lịch hẹn này?")) {
-      alert(`Đã từ chối lịch hẹn #${id}`);
+      setAppointments(prev => prev.map(apt => apt.id === id ? { ...apt, status: "rejected" } : apt));
     }
   };
 
@@ -137,7 +138,12 @@ export default function DoctorAppointments() {
                       Hoàn thành
                     </span>
                   )}
-                  <span className="text-sm font-semibold text-green-600">
+                  {appointment.status === "rejected" && (
+                    <span className="px-3 py-1 bg-red-100 text-red-700 text-sm font-medium rounded-lg">
+                      Đã từ chối
+                    </span>
+                  )}
+                  <span className={`text-sm font-semibold ${appointment.status === 'rejected' ? 'text-gray-400 line-through' : 'text-green-600'}`}>
                     {appointment.fee.toLocaleString()}đ
                   </span>
                 </div>

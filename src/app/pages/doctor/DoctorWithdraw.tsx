@@ -26,7 +26,7 @@ export default function DoctorWithdraw() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const withdrawAmount = parseInt(amount.replace(/,/g, ""));
+    const withdrawAmount = parseInt(amount.replace(/\D/g, "") || "0", 10);
 
     if (!selectedBank) {
       alert("Vui lòng chọn ngân hàng");
@@ -39,16 +39,16 @@ export default function DoctorWithdraw() {
     }
 
     if (withdrawAmount < minWithdraw) {
-      alert(`Số tiền rút tối thiểu là ${minWithdraw.toLocaleString()}đ`);
+      alert(`Số tiền rút tối thiểu là ${minWithdraw.toLocaleString("vi-VN")}đ`);
       return;
     }
 
     if (withdrawAmount > maxWithdraw) {
-      alert(`Số dư không đủ. Số dư hiện tại: ${maxWithdraw.toLocaleString()}đ`);
+      alert(`Số dư không đủ. Số dư hiện tại: ${maxWithdraw.toLocaleString("vi-VN")}đ`);
       return;
     }
 
-    if (confirm(`Xác nhận rút ${withdrawAmount.toLocaleString()}đ về tài khoản ngân hàng?`)) {
+    if (confirm(`Xác nhận rút ${withdrawAmount.toLocaleString("vi-VN")}đ về tài khoản ngân hàng?`)) {
       setTimeout(() => {
         alert("Yêu cầu rút tiền đã được gửi! Tiền sẽ về tài khoản trong 1-2 ngày làm việc.");
         navigate("/doctor/wallet");
@@ -57,7 +57,7 @@ export default function DoctorWithdraw() {
   };
 
   const handleQuickAmount = (value: number) => {
-    setAmount(value.toLocaleString());
+    setAmount(value.toLocaleString("vi-VN"));
   };
 
   return (
@@ -71,7 +71,7 @@ export default function DoctorWithdraw() {
         {/* Available Balance */}
         <div className="bg-gradient-to-br from-teal-600 to-blue-600 rounded-2xl p-6 text-white mb-6">
           <p className="text-sm opacity-90 mb-2">Số dư khả dụng</p>
-          <p className="text-4xl font-bold">{availableBalance.toLocaleString()}đ</p>
+          <p className="text-4xl font-bold">{availableBalance.toLocaleString("vi-VN")}đ</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-6">
@@ -85,10 +85,8 @@ export default function DoctorWithdraw() {
                 type="text"
                 value={amount}
                 onChange={(e) => {
-                  const value = e.target.value.replace(/,/g, "");
-                  if (/^\d*$/.test(value)) {
-                    setAmount(value ? parseInt(value).toLocaleString() : "");
-                  }
+                  const value = e.target.value.replace(/\D/g, "");
+                  setAmount(value ? parseInt(value, 10).toLocaleString("vi-VN") : "");
                 }}
                 placeholder="Nhập số tiền"
                 className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-lg font-semibold"
@@ -103,12 +101,12 @@ export default function DoctorWithdraw() {
                   onClick={() => handleQuickAmount(quickAmount)}
                   className="px-4 py-2 border border-teal-600 text-teal-600 rounded-lg hover:bg-teal-50 text-sm font-medium"
                 >
-                  {quickAmount.toLocaleString()}đ
+                  {quickAmount.toLocaleString("vi-VN")}đ
                 </button>
               ))}
             </div>
             <p className="text-sm text-gray-500 mt-2">
-              Rút tối thiểu: {minWithdraw.toLocaleString()}đ
+              Rút tối thiểu: {minWithdraw.toLocaleString("vi-VN")}đ
             </p>
           </div>
 
@@ -207,7 +205,7 @@ export default function DoctorWithdraw() {
                   <p className="text-sm text-gray-600">{withdrawal.date}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-red-600">-{withdrawal.amount.toLocaleString()}đ</p>
+                  <p className="font-bold text-red-600">-{withdrawal.amount.toLocaleString("vi-VN")}đ</p>
                   <span className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded">
                     Thành công
                   </span>
