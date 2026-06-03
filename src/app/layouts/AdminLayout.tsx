@@ -28,9 +28,9 @@ export default function AdminLayout() {
     <div className="min-h-screen bg-gray-50 flex">
       <aside className="hidden md:block w-64 bg-white shadow-lg sticky top-0 h-screen overflow-y-auto">
         <div className="p-6">
-          <Link to="/admin" className="flex items-center gap-2 text-gray-600 hover:text-gray-700 mb-8">
-            <ChevronLeft className="w-5 h-5" />
-            <span className="text-sm">Dashboard</span>
+          <Link to="/admin" className="flex items-center gap-3 mb-8">
+            <div className="w-8 h-8 bg-gray-200 rounded-md flex items-center justify-center text-gray-700 font-bold">AD</div>
+            <span className="text-sm font-semibold text-gray-900">Quản trị</span>
           </Link>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Quản lý</h1>
           <p className="text-sm text-gray-600 mb-8">Admin User</p>

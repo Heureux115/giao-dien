@@ -29,9 +29,11 @@ export default function DoctorLayout() {
       {/* Sidebar */}
       <aside className="hidden md:block w-64 bg-white shadow-lg flex flex-col sticky top-0 h-screen overflow-y-auto">
         <div className="p-6 flex-1">
-          <Link to="/doctor" className="flex items-center gap-2 text-teal-600 hover:text-teal-700 mb-8">
-            <ChevronLeft className="w-5 h-5" />
-            <span className="text-sm">Dashboard</span>
+          <Link to="/doctor" className="flex items-center gap-3 mb-8">
+            <div className="w-8 h-8 bg-gradient-to-br from-teal-600 to-blue-600 rounded-md flex items-center justify-center text-white font-bold">
+              BS
+            </div>
+            <span className="text-sm font-semibold text-gray-900">Bác sĩ</span>
           </Link>
 
           {/* Profile Section */}
