@@ -79,33 +79,29 @@ export default function Settings() {
     <div className="max-w-5xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Cài đặt</h1>
 
-      <div className="grid lg:grid-cols-4 gap-6">
-        {/* Sidebar Tabs */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-xl shadow-sm p-4 space-y-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === tab.id
-                      ? "bg-blue-100 text-blue-600"
-                      : "text-gray-600 hover:bg-gray-100"
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span className="font-medium">{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+      {/* Horizontal Tabs */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-medium transition-colors ${
+                activeTab === tab.id
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
+              }`}
+            >
+              <Icon className="w-5 h-5" />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
 
-        {/* Content */}
-        <div className="lg:col-span-3">
-          <div className="bg-white rounded-xl shadow-sm p-6">
+      {/* Content */}
+      <div className="bg-white rounded-xl shadow-sm p-6 max-w-4xl">
             {/* Profile Tab */}
             {activeTab === "profile" && (
               <form onSubmit={handleSaveProfile}>
@@ -461,8 +457,6 @@ export default function Settings() {
                 </button>
               </form>
             )}
-          </div>
-        </div>
       </div>
     </div>
   );
